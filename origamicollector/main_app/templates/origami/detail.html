@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Origami Details</h1>
+
+<div class="card">
+  <div class="card-content">
+    <span class="card-title">{{ origami_one.name }}</span>
+    <p>Color: {{ origami_one.color }}</p>
+    <p>Description: {{ origami_one.description }}</p>
+    {% if origami_one.age > 0 %}
+      <p>How long ago was this created? {{ origami_one.age }} year(s) ago</p>
+    {% else %}
+      <p>How long ago was this created? A few months ago </p>
+    {% endif %}
+  </div>
+  <div class="card-action">
+    <a href="{% url 'origami_update' origami_one.id %}">Edit</a>
+    <a href="{% url 'origami_delete' origami_one.id %}">Delete</a>
+  </div>
+</div>
+
+{% endblock %}

@@ -18,8 +18,9 @@
           <li><a href="/" class="left brand-logo">&nbsp;&nbsp;OrigamiCollector</a></li>
         </ul>
         <ul class="right">
-          <li><a href="/about">About</a></li>
-          <li><a href="/origami">View All My Origami Creations</a></li>
+          <li><a href="{% url 'about' %}">About</a></li>
+          <li><a href="{% url 'origami_create' %}">Add Origami</a></li>
+          <li><a href="{% url 'index' %}">View All My Origami Creations</a></li>
         </ul>
       </div>
     </nav>
