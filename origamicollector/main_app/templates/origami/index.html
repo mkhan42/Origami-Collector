@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Origami List</h1>
+
+{% for origami in origami %}
+  <div class="card">
+    <div class="card-content">
+      <span class="card-title">{{ origami.name }}</span>
+      <p>Color: {{ origami.color }}</p>
+      <p>Description: {{ origami.description }}</p>
+      {% if origami.age > 0 %}
+        <p>How long ago was this created? {{ origami.age }} years ago</p>
+      {% else %}
+        <p>How long ago was this created? A few months ago</p>
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}
+
+{% endblock %}
