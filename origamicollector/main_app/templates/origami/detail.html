@@ -3,21 +3,104 @@
 
 <h1>Origami Details</h1>
 
-<div class="card">
-  <div class="card-content">
-    <span class="card-title">{{ origami_one.name }}</span>
-    <p>Color: {{ origami_one.color }}</p>
-    <p>Description: {{ origami_one.description }}</p>
-    {% if origami_one.age > 0 %}
-      <p>How long ago was this created? {{ origami_one.age }} year(s) ago</p>
-    {% else %}
-      <p>How long ago was this created? A few months ago </p>
-    {% endif %}
+<div class="row">
+  <div class="col s6">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ origami_one.name }}</span>
+        <p>Breed: {{ origami_one.color }}</p>
+        <p>Description: {{ origami_one.description }}</p>
+        {% if origami_one.age > 0 %}
+          <p>How long ago was this created? {{ origami_one.age }} year(s) ago</p>
+        {% else %}
+          <p>How long ago was this created? Sometime this year</p>
+        {% endif %}
+      </div>
+      <div class="card-action">
+        <a href="{% url 'origami_update' origami_one.id %}">Edit</a>
+        <a href="{% url 'origami_delete' origami_one.id %}">Delete</a>
+      </div>
+    </div>
   </div>
-  <div class="card-action">
-    <a href="{% url 'origami_update' origami_one.id %}">Edit</a>
-    <a href="{% url 'origami_delete' origami_one.id %}">Delete</a>
+  <div class="col s6">
+    <form action="{% url 'add_decoration' origami_one.id %}" method="POST">
+      {% csrf_token %}
+      {{ decorated_form.as_p }}
+      <input type="submit" class="btn" value="Add Decoration">
+    </form>
+    <table class="striped">
+      <thead>
+        <tr><th>Date</th><th>Decoration</th></tr>
+      </thead>
+      <tbody>
+        {% for decorated in origami_one.decorated_set.all %}
+          <tr>
+            <td>{{decorated.date}}</td>
+            <td>{{decorated.get_decoration_display}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
+
+<!-- This is all new markup to be added just above the <script> tag -->
+  <hr>
+  <div class="row">
+    <div class="col s6">
+      <h3>{{ origami_one.name }}'s Toys</h3>
+      {% if origami_one.materials.count %}
+        {% for material in origami_one.materials.all %}
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">
+                A <span style="color:{{ material.color }}">{{ material.color }}</span> {{ material.name }}
+              </span>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <h5>No Materials :(</h5>
+      {% endif %}
+    </div>
+    <!-- Available toys will come after this line -->
+    <div class="col s6">
+      <h3>Available Material</h3>
+      {% if materials.count %}
+        {% for material in materials.all %}
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">
+                A <span style="color: {{ material.color }}">{{ material.color }}</span> {{ material.name }}
+              </span>
+            </div>
+            <div class="card-action">
+              <form action="{% url 'assoc_material' origami_one.id material.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn">Add</button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <h5>{{origami_one.name}} Already Has All Material Available</h5>
+      {% endif %}
+    </div>
+  </div>
+
+<script>
+
+const dateEl = document.getElementById('id_date');
+  M.Datepicker.init(dateEl, {
+    format: 'yyyy-mm-dd',
+    defaultDate: new Date(),
+    setDefaultDate: true,
+    autoClose: true
+  });
+
+  const selectEl = document.getElementById('id_decoration');
+  M.FormSelect.init(selectEl);
+
+</script>
 
 {% endblock %}
